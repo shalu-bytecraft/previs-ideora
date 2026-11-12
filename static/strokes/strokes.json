@@ -1,0 +1,86 @@
+[
+  {
+    "file": "stroke-01.webp",
+    "colour": "blush",
+    "avg": "#DEABB6",
+    "text": "#5C4A3F",
+    "kb": 33
+  },
+  {
+    "file": "stroke-02.webp",
+    "colour": "mocha",
+    "avg": "#846335",
+    "text": "#FBF6EE",
+    "kb": 30
+  },
+  {
+    "file": "stroke-03.webp",
+    "colour": "sand",
+    "avg": "#BDA071",
+    "text": "#5C4A3F",
+    "kb": 31
+  },
+  {
+    "file": "stroke-04.webp",
+    "colour": "sage",
+    "avg": "#86875A",
+    "text": "#FBF6EE",
+    "kb": 34
+  },
+  {
+    "file": "stroke-05.webp",
+    "colour": "peach",
+    "avg": "#CC8973",
+    "text": "#5C4A3F",
+    "kb": 29
+  },
+  {
+    "file": "stroke-06.webp",
+    "colour": "ochre",
+    "avg": "#947439",
+    "text": "#FBF6EE",
+    "kb": 33
+  },
+  {
+    "file": "stroke-07.webp",
+    "colour": "taupe",
+    "avg": "#968E82",
+    "text": "#FBF6EE",
+    "kb": 29
+  },
+  {
+    "file": "stroke-08.webp",
+    "colour": "caramel",
+    "avg": "#C1803A",
+    "text": "#FBF6EE",
+    "kb": 30
+  },
+  {
+    "file": "stroke-09.webp",
+    "colour": "blush-flip",
+    "avg": "#DEABB6",
+    "text": "#5C4A3F",
+    "kb": 33
+  },
+  {
+    "file": "stroke-10.webp",
+    "colour": "olive",
+    "avg": "#A7A56F",
+    "text": "#5C4A3F",
+    "kb": 29
+  },
+  {
+    "file": "stroke-11.webp",
+    "colour": "sand-flip",
+    "avg": "#BDA071",
+    "text": "#5C4A3F",
+    "kb": 31
+  },
+  {
+    "file": "stroke-12.webp",
+    "colour": "peach-flip",
+    "avg": "#CC8973",
+    "text": "#5C4A3F",
+    "kb": 29
+  }
+]
