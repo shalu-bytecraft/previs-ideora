@@ -1,13 +1,14 @@
 from music import add_sound
 
 import random
+import time
 from pathlib import Path
 
 import streamlit as st
-
+from google import genai
 st.set_page_config(page_title="Previs Ideora", page_icon="🎨", layout="wide")
 add_sound()
-
+client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
 
 def load_css(path):
     css = Path(path).read_text(encoding="utf-8")
@@ -114,9 +115,62 @@ for row in range(3):
         with cols[c]:
             st.button(FEATURES[i][0], key=key, on_click=pick, args=(i,))
 
+
 name, desc = FEATURES[st.session_state.tab]
-st.markdown(
-    f'<div class="panel"><h3>{name}</h3><p>{desc}</p>'
-    f'<p class="soon">This feature is coming soon.</p></div>',
-    unsafe_allow_html=True,
-)
+
+if st.session_state.tab == 0:
+
+    st.markdown(f"<div class='panel'><h3>{name}</h3><p>{desc}</p></div>", unsafe_allow_html=True)
+
+    idea = st.text_area(
+        "Describe your creative idea",
+        placeholder="Example: A magical forest with glowing butterflies..."
+    )
+
+    if st.button("✨ Generate Concept"):
+
+        if not idea.strip():
+            st.warning("Please enter your idea first.")
+
+        else:
+            with st.spinner("AI is creating your concept..."):
+
+                response = None
+
+                for attempt in range(3):
+                    try:
+                        response = client.models.generate_content(
+                            model="gemini-3.8-flash",
+                            contents=f"""
+                            Create a creative concept from this idea: {idea}
+
+                            Include:
+                            1. Character
+                            2. Scene
+                            3. Mood
+                            4. Image generation prompt
+                            """
+                        )
+                        break
+
+                    except Exception as e:
+                        error_text = str(e)
+
+                        if ("503" in error_text or "UNAVAILABLE" in error_text) and attempt < 2:
+                            wait_time = 3 * (attempt + 1)
+                            st.info(f"Server busy. Retrying in {wait_time} seconds...")
+                            time.sleep(wait_time)
+                        else:
+                            st.error(f"Something went wrong: {e}")
+                            break
+
+                if response is not None:
+                    st.subheader("Your AI Generated Concept")
+                    st.write(response.text)
+
+else:
+    st.markdown(
+        f'<div class="panel"><h3>{name}</h3><p>{desc}</p>'
+        f'<p class="soon">This feature is coming soon.</p></div>',
+        unsafe_allow_html=True,
+    )
