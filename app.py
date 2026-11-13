@@ -140,7 +140,7 @@ if st.session_state.tab == 0:
                 for attempt in range(3):
                     try:
                         response = client.models.generate_content(
-                            model="gemini-3.8-flash",
+                            model="gemini-2.5-flash",
                             contents=f"""
                             Create a creative concept from this idea: {idea}
 
