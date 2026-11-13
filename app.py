@@ -1,9 +1,12 @@
+from music import add_sound
+
 import random
 from pathlib import Path
 
 import streamlit as st
 
 st.set_page_config(page_title="Previs Ideora", page_icon="🎨", layout="wide")
+add_sound()
 
 
 def load_css(path):
