@@ -50,3 +50,39 @@ html, body { background: #F8F1E7 !important; }
 @media (prefers-reduced-motion: reduce) { .stApp::before, .stApp::after { animation: none; } }
 
 .stMarkdown .subtext { margin-left: auto !important; margin-right: auto !important; max-width: 560px; text-align: center; }
+
+div[class*="st-key-tab"] { display: flex; justify-content: center; }
+div[class*="st-key-tab"] button {
+  width: 200px; height: 86px; padding: 0 28px;
+  border: none !important; outline: none !important; box-shadow: none !important;
+  background-color: transparent !important;
+  background-repeat: no-repeat; background-size: 100% 100%; background-position: center;
+  animation: tabdrift var(--d, 6s) ease-in-out infinite alternate;
+  animation-delay: var(--dl, 0s);
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+div[class*="st-key-tab"] button p {
+  font-family: 'Delicious Handrawn', cursive !important;
+  font-size: 23px !important; font-weight: 400 !important;
+  letter-spacing: 0.4px; line-height: 1.05; margin: 0;
+}
+div[class*="st-key-tab"] button:hover {
+  transform: translateY(-5px) rotate(-1.5deg) !important;
+  filter: brightness(1.04) drop-shadow(0 6px 6px rgba(92, 74, 63, 0.18));
+}
+div[class*="st-key-tab"] button:active, div[class*="st-key-tab"] button:focus {
+  background-color: transparent !important; box-shadow: none !important;
+}
+div[class*="st-key-tabon_"] button {
+  animation: none; transform: scale(1.08);
+  filter: drop-shadow(0 6px 6px rgba(92, 74, 63, 0.25));
+}
+@keyframes tabdrift {
+  from { transform: translate(0, 0) rotate(-1deg); }
+  to   { transform: translate(4px, -5px) rotate(1deg); }
+}
+.panel { background: #FBF6EE; border: 2px dashed #DCC3A5; border-radius: 26px; padding: 20px 26px;
+  max-width: 640px; margin: 22px auto; box-shadow: 0 10px 24px rgba(92, 74, 63, 0.10); }
+.panel h3 { font-family: 'Delicious Handrawn', cursive; font-size: 38px; margin: 0 0 4px; color: #B7766B; }
+.panel p { margin: 6px 0; }
+.panel .soon { color: #A68A78; font-size: 19px; }
