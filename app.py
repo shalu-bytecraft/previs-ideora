@@ -9,6 +9,7 @@ import streamlit as st
 st.set_page_config(page_title="Previs Ideora", page_icon="🎨", layout="wide")
 add_sound()
 from ai import ask_gemini
+from palette import palette_page
 
 def load_css(path):
     css = Path(path).read_text(encoding="utf-8")
@@ -314,6 +315,8 @@ The artist owns the final creative decisions.
             file_name="previs_ideora_concept.txt",
             mime="text/plain"
         )
+elif st.session_state.tab == 1:
+     palette_page(label, name, desc)
 
 else:
     st.markdown(
@@ -321,3 +324,4 @@ else:
         f'<p class="soon">This feature is coming soon.</p></div>',
         unsafe_allow_html=True,
     )
+
