@@ -1,2 +1,2 @@
 streamlit
-google-genaigit add requirements.txt
+google-genai
