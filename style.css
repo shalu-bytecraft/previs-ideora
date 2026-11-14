@@ -86,3 +86,8 @@ div[class*="st-key-tabon_"] button {
 .panel h3 { font-family: 'Delicious Handrawn', cursive; font-size: 38px; margin: 0 0 4px; color: #B7766B; }
 .panel p { margin: 6px 0; }
 .panel .soon { color: #A68A78; font-size: 19px; }
+
+/* compact storyboard cards */
+div[class*="st-key-shotcard"] .stMarkdown p { font-size: 18px; line-height: 1.3; margin: 2px 0; }
+div[class*="st-key-shotcard"] h4.lbl { font-size: 1.3rem; }
+div[class*="st-key-shotcard"] details summary p { font-size: 18px; }
