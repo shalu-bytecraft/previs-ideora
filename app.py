@@ -1,18 +1,37 @@
 from music import add_sound
-
 import random
-import time
+import json
+
 from pathlib import Path
 
 import streamlit as st
-from google import genai
+
 st.set_page_config(page_title="Previs Ideora", page_icon="🎨", layout="wide")
 add_sound()
-client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
+from ai import ask_gemini
 
 def load_css(path):
     css = Path(path).read_text(encoding="utf-8")
     st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+
+
+# Extra look-and-feel: thinner handwritten labels + little crayon icons beside headings
+EXTRA_CSS = (
+    'h1,h2,h3,h4,[data-testid="stHeading"] *{font-weight:400 !important;}'
+    '[class*="st-key-tab"] button p{font-weight:400 !important;}'
+    '.lbl{display:flex;align-items:center;gap:.55rem;margin:.2rem 0 .6rem;padding:0;'
+    "font-family:'Delicious Handrawn','Gaegu',cursive;font-weight:400;color:#5C4A3F;line-height:1.1;}"
+    'h2.lbl{font-size:2.1rem;}h3.lbl{font-size:1.6rem;}'
+    '.lbl img{width:34px;height:34px;flex:none;}'
+)
+
+
+def label(icon, text, size="h3"):
+    """A heading with a hand-drawn crayon icon instead of an emoji."""
+    st.markdown(
+        f'<{size} class="lbl"><img src="/app/static/icons/{icon}.svg" alt="">{text}</{size}>',
+        unsafe_allow_html=True,
+    )
 
 
 FONTS = ["Abril Fatface", "Playfair Display", "Special Elite", "DM Serif Display",
@@ -56,6 +75,7 @@ def paper_title(words):
 
 
 load_css("style.css")
+st.markdown(f"<style>{EXTRA_CSS}</style>", unsafe_allow_html=True)
 
 st.markdown(paper_title(["PREVIS", "IDEORA"]), unsafe_allow_html=True)
 st.markdown('<p class="tagline">Studio Co-Pilot</p>', unsafe_allow_html=True)
@@ -118,55 +138,182 @@ for row in range(3):
 
 name, desc = FEATURES[st.session_state.tab]
 
+
+
+
 if st.session_state.tab == 0:
 
-    st.markdown(f"<div class='panel'><h3>{name}</h3><p>{desc}</p></div>", unsafe_allow_html=True)
+    st.markdown(
+        f"<div class='panel'><h3>{name}</h3><p>{desc}</p></div>",
+        unsafe_allow_html=True
+    )
 
     idea = st.text_area(
         "Describe your creative idea",
-        placeholder="Example: A magical forest with glowing butterflies..."
+        placeholder="Example: A magical forest with glowing butterflies...",
+        height=120
     )
-
-    if st.button("✨ Generate Concept"):
+    if st.button("Generate Concept"):
 
         if not idea.strip():
             st.warning("Please enter your idea first.")
 
         else:
-            with st.spinner("AI is creating your concept..."):
+            with st.spinner("Developing your creative concept..."):
+                try:
+                    prompt = f"""
+                    You are a creative assistant for artists.
+                    Your job is to SUPPORT artists, never replace their creativity.
 
-                response = None
+Develop this idea:
+{idea}
 
-                for attempt in range(3):
-                    try:
-                        response = client.models.generate_content(
-                            model="gemini-2.5-flash",
-                            contents=f"""
-                            Create a creative concept from this idea: {idea}
+Return ONLY valid JSON with these exact keys:
 
-                            Include:
-                            1. Character
-                            2. Scene
-                            3. Mood
-                            4. Image generation prompt
-                            """
-                        )
-                        break
+{{
+  "character": "Character description",
+  "scene": "Scene and environment description",
+  "mood": "Mood, atmosphere and lighting",
+  "palette": [
+    {{"name": "Colour name", "hex": "#RRGGBB"}},
+    {{"name": "Colour name", "hex": "#RRGGBB"}},
+    {{"name": "Colour name", "hex": "#RRGGBB"}},
+    {{"name": "Colour name", "hex": "#RRGGBB"}},
+    {{"name": "Colour name", "hex": "#RRGGBB"}}
+  ],
+  "story": "Short story direction",
+  "image_prompt": "Detailed image generation prompt"
+}}
 
-                    except Exception as e:
-                        error_text = str(e)
+Choose five palette colours that really suit the idea.
+Keep the suggestions original, useful and editable.
+Do not make creative decisions final for the artist.
+"""
+                    raw_text = ask_gemini(prompt).strip()
+                    # keep only the JSON object, whatever wrapping Gemini adds around it
+                    raw_text = raw_text[raw_text.find("{"): raw_text.rfind("}") + 1]
+                    concept = json.loads(raw_text)
 
-                        if ("503" in error_text or "UNAVAILABLE" in error_text) and attempt < 2:
-                            wait_time = 3 * (attempt + 1)
-                            st.info(f"Server busy. Retrying in {wait_time} seconds...")
-                            time.sleep(wait_time)
-                        else:
-                            st.error(f"Something went wrong: {e}")
-                            break
+                    st.session_state.concept_data = concept
+                    st.session_state.concept_idea = idea
+                    st.session_state.concept_version = (
+                        st.session_state.get("concept_version", 0) + 1
+                    )
+                except Exception as e:
+                    st.warning("Gemini could not finish this one.")
+                    st.code(f"{type(e).__name__}: {str(e)[:300]}")
 
-                if response is not None:
-                    st.subheader("Your AI Generated Concept")
-                    st.write(response.text)
+    # Display generated concept
+    if "concept_data" in st.session_state:
+
+        concept = st.session_state.concept_data
+        version = st.session_state.concept_version
+
+        st.divider()
+        label("brush", "Your Creative Concept", "h2")
+
+        # Separate editable cards
+        col1, col2 = st.columns(2)
+
+        with col1:
+            with st.container(border=True):
+                label("person", "Character")
+                character = st.text_area(
+                    "Edit character",
+                    value=concept.get("character", ""),
+                    key=f"character_{version}"
+                )
+
+            with st.container(border=True):
+                label("moon", "Mood &amp; Atmosphere")
+                mood = st.text_area(
+                    "Edit mood",
+                    value=concept.get("mood", ""),
+                    key=f"mood_{version}"
+                )
+
+            with st.container(border=True):
+                label("book", "Story Direction")
+                story = st.text_area(
+                    "Edit story",
+                    value=concept.get("story", ""),
+                    key=f"story_{version}"
+                )
+
+        with col2:
+            with st.container(border=True):
+                label("tree", "Scene")
+                scene = st.text_area(
+                    "Edit scene",
+                    value=concept.get("scene", ""),
+                    key=f"scene_{version}"
+                )
+
+            with st.container(border=True):
+                label("palette", "Color Palette")
+
+                palette = concept.get("palette", [])
+
+                for colour in palette:
+                    st.markdown(
+                        f"**{colour.get('name', 'Colour')}** — "
+                        f"`{colour.get('hex', '')}`"
+                    )
+
+            with st.container(border=True):
+                label("sparkle", "Image Generation Prompt")
+                image_prompt = st.text_area(
+                    "Edit image prompt",
+                    value=concept.get("image_prompt", ""),
+                    key=f"prompt_{version}"
+                )
+
+        # Complete concept sheet
+        st.divider()
+        label("paper", "Creative Concept Sheet", "h2")
+
+        concept_sheet = f"""
+PREVIS-IDEORA
+CREATIVE CONCEPT SHEET
+
+ORIGINAL IDEA:
+{st.session_state.concept_idea}
+
+CHARACTER:
+{character}
+
+SCENE:
+{scene}
+
+MOOD & ATMOSPHERE:
+{mood}
+
+COLOR PALETTE:
+{chr(10).join(str(c.get('name', 'Colour')) + ': ' + str(c.get('hex', '')) for c in palette)}
+
+STORY DIRECTION:
+{story}
+
+IMAGE GENERATION PROMPT:
+{image_prompt}
+
+Created with Previs-Ideora.
+The artist owns the final creative decisions.
+"""
+
+        st.text_area(
+            "Your complete concept sheet",
+            value=concept_sheet,
+            height=350,
+            key=f"sheet_{version}"
+        )
+
+        st.download_button(
+            "Download Concept Sheet",
+            data=concept_sheet,
+            file_name="previs_ideora_concept.txt",
+            mime="text/plain"
+        )
 
 else:
     st.markdown(
