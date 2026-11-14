@@ -10,6 +10,7 @@ st.set_page_config(page_title="Previs Ideora", page_icon="🎨", layout="wide")
 add_sound()
 from ai import ask_gemini
 from palette import palette_page
+from style_lab import style_lab_page
 
 def load_css(path):
     css = Path(path).read_text(encoding="utf-8")
@@ -317,7 +318,9 @@ The artist owns the final creative decisions.
         )
 elif st.session_state.tab == 1:
      palette_page(label, name, desc)
-
+    
+elif st.session_state.tab == 2:
+    style_lab_page(label, name, desc)
 else:
     st.markdown(
         f'<div class="panel"><h3>{name}</h3><p>{desc}</p>'
