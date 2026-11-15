@@ -2,7 +2,7 @@
 
 **An AI idea-to-storyboard assistant that supports digital artists. The AI plans, the artist creates.**
 
-Built by **Team Algo-rythm** for **GeNarrative Clash 2026** , **Open Track: Empowering the Creative Artist**.
+Built by **Team Tetra Spectra** for **GeNarrative Clash 2026** , **[Domain:Digital Art & Visual Co-Pilots]**
 
 - **Live demo:** `[add your Streamlit link here]`
 - **Demo video:** `[add your video link here]`
@@ -15,7 +15,7 @@ Artists lose hours before they draw a single line. They stare at a blank page, h
 
 ## Our solution
 
-Previs Ideora turns **one line of idea** into a creative starting kit: a concept, a colour palette, a style comparison, a shot-by-shot storyboard and a mood board. Every result is **editable**, nothing is final, and the artist always owns the creative decisions. The AI only suggests.
+Previs Ideora turns **one line of idea** into a creative starting kit: a concept, a colour palette, a style comparison, a shot-by-shot storyboard and a mood board etc., Every result is **editable**, nothing is final, and the artist always owns the creative decisions. The AI only suggests.
 
 ---
 
@@ -142,8 +142,6 @@ streamlit run app.py
 ```
 
 Then open **http://localhost:8501**.
-
-> Never commit `secrets.toml`. It is listed in `.gitignore` so your key stays private.
 
 ## Deploy on Streamlit Community Cloud
 
