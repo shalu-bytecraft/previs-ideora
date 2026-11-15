@@ -34,3 +34,30 @@ def ask_gemini(prompt: str) -> str:
                     continue
                 raise
     raise RuntimeError("Gemini is busy") from last
+
+
+from google.genai import types
+
+def ask_gemini_image(prompt: str, image_bytes: bytes, mime_type: str = "image/jpeg") -> str:
+    client = genai.Client(api_key=get_key())
+    last = None
+    for model in MODELS:
+        for attempt in range(2):
+            try:
+                reply = client.models.generate_content(
+                    model=model,
+                    contents=[
+                        types.Part.from_bytes(data=image_bytes, mime_type=mime_type),
+                        prompt,
+                    ],
+                )
+                return reply.text
+            except errors.APIError as e:
+                last = e
+                if e.code == 404:
+                    break
+                if e.code in (429, 500, 503, 504):
+                    time.sleep(2 ** attempt)
+                    continue
+                raise
+    raise RuntimeError("Gemini is busy") from last

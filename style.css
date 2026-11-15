@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Caveat+Brush&family=DM+Serif+Display&family=Delicious+Handrawn&family=Gaegu:wght@400;700&family=Playfair+Display:wght@700;900&family=Rye&family=Shadows+Into+Light&family=Special+Elite&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Caveat+Brush&family=DM+Serif+Display&family=Delicious+Handrawn&family=Fredoka:wght@400;500;600;700&family=Gaegu:wght@400;700&family=Lora:ital,wght@0,400;0,500;1,400&family=Patrick+Hand&family=Playfair+Display:wght@700;900&family=Rye&family=Shadows+Into+Light&family=Special+Elite&display=swap');
 
 .stApp { background: #F8F1E7; }
 #MainMenu, footer, [data-testid="stToolbar"], [data-testid="stDecoration"] { display: none !important; }
@@ -25,8 +25,23 @@ h1, h2, h3 { font-family: 'Delicious Handrawn', cursive !important; color: #5C4A
   0%, 100% { transform: translateY(0) rotate(var(--t)); }
   50% { transform: translateY(-6px) rotate(calc(var(--t) * -0.6)); }
 }
-.tagline { font-family: 'Delicious Handrawn', cursive; font-size: 36px; color: #B7766B; text-align: center; margin: 4px 0; }
-.subtext { text-align: center; color: #A68A78 !important; max-width: 560px; margin: 0 auto 18px; }
+.tagline, .stMarkdown p.tagline {
+  font-family: 'Patrick Hand', cursive !important;
+  font-size: 34px !important;
+  letter-spacing: 0.6px;
+  color: #B7766B !important;
+  text-align: center;
+  margin: 6px 0 4px;
+}
+.subtext, .stMarkdown p.subtext {
+  font-family: 'Gaegu', cursive !important;
+  font-weight: 700 !important;
+  font-size: 22px !important;
+  text-align: center;
+  color: #8A7162 !important;
+  max-width: 560px;
+  margin: 0 auto 18px !important;
+}
 @media (max-width: 600px) { .title-block { zoom: 0.6; } }
 html, body { background: #F8F1E7 !important; }
 .stApp, [data-testid="stAppViewContainer"], [data-testid="stMain"], [data-testid="stHeader"] { background: transparent !important; }
@@ -53,7 +68,11 @@ html, body { background: #F8F1E7 !important; }
 
 div[class*="st-key-tab"] { display: flex; justify-content: center; }
 div[class*="st-key-tab"] button {
-  width: 200px; height: 86px; padding: 0 28px;
+  width: 215px; height: 86px;
+  padding: 0 18px 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   border: none !important; outline: none !important; box-shadow: none !important;
   background-color: transparent !important;
   background-repeat: no-repeat; background-size: 100% 100%; background-position: center;
@@ -61,10 +80,15 @@ div[class*="st-key-tab"] button {
   animation-delay: var(--dl, 0s);
   transition: transform 0.25s ease, filter 0.25s ease;
 }
+
 div[class*="st-key-tab"] button p {
-  font-family: 'Delicious Handrawn', cursive !important;
-  font-size: 23px !important; font-weight: 400 !important;
-  letter-spacing: 0.4px; line-height: 1.05; margin: 0;
+  font-family: 'Fredoka', sans-serif !important;
+  font-size: 17px !important; font-weight: 500 !important;
+  letter-spacing: 0.2px; line-height: 1.15; margin: 0 !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  text-align: center;
 }
 div[class*="st-key-tab"] button:hover {
   transform: translateY(-5px) rotate(-1.5deg) !important;
@@ -74,8 +98,14 @@ div[class*="st-key-tab"] button:active, div[class*="st-key-tab"] button:focus {
   background-color: transparent !important; box-shadow: none !important;
 }
 div[class*="st-key-tabon_"] button {
-  animation: none; transform: scale(1.08);
-  filter: drop-shadow(0 6px 6px rgba(92, 74, 63, 0.25));
+  animation: none !important;
+  transform: scale(1.18) translateY(-4px) rotate(-1.5deg) !important;
+  filter: brightness(1.06) drop-shadow(0 10px 12px rgba(92, 74, 63, 0.35)) !important;
+  z-index: 10;
+}
+
+div[class*="st-key-tabon_"] button:hover {
+  transform: scale(1.2) translateY(-5px) rotate(-1.5deg) !important;
 }
 @keyframes tabdrift {
   from { transform: translate(0, 0) rotate(-1deg); }
@@ -91,3 +121,112 @@ div[class*="st-key-tabon_"] button {
 div[class*="st-key-shotcard"] .stMarkdown p { font-size: 18px; line-height: 1.3; margin: 2px 0; }
 div[class*="st-key-shotcard"] h4.lbl { font-size: 1.3rem; }
 div[class*="st-key-shotcard"] details summary p { font-size: 18px; }
+/* Larger label & text area font sizes */
+[data-testid="stTextArea"] label p {
+  font-size: 26px !important;
+  margin-bottom: 6px !important;
+}
+
+[data-testid="stTextArea"] textarea,
+[data-testid="stTextArea"] textarea::placeholder {
+  font-size: 24px !important;
+  line-height: 1.4 !important;
+}
+
+/* Keep the top header transparent, never hidden */
+header[data-testid="stHeader"] {
+  background: transparent !important;
+  visibility: visible !important;
+  pointer-events: none !important;
+}
+
+/* Force the top-left sidebar toggle visible across all Streamlit versions */
+[data-testid="stSidebarCollapsedControl"],
+[data-testid="stExpandSidebarButton"] {
+  display: flex !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  position: fixed !important;
+  top: 14px !important;
+  left: 16px !important;
+  z-index: 999999 !important;
+  width: 44px !important;
+  height: 44px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background-color: #FBF6EE !important;
+  border: 2px dashed #DCC3A5 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 10px rgba(92, 74, 63, 0.14) !important;
+  transition: transform 0.2s ease !important;
+}
+
+[data-testid="stSidebarCollapsedControl"]:hover,
+[data-testid="stExpandSidebarButton"]:hover {
+  transform: scale(1.06) !important;
+}
+
+/* Hide Streamlit's default chevron and show a clean 3-dash ☰ icon */
+[data-testid="stSidebarCollapsedControl"] svg,
+[data-testid="stExpandSidebarButton"] svg {
+  display: none !important;
+}
+
+[data-testid="stSidebarCollapsedControl"]::after,
+[data-testid="stExpandSidebarButton"]::after {
+  content: "☰" !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  color: #5C4A3F !important;
+  line-height: 1 !important;
+}
+
+/* Match sidebar background to your sketchbook theme */
+section[data-testid="stSidebar"] {
+  background-color: #FBF6EE !important;
+  border-right: 2px dashed #DCC3A5 !important;
+}
+
+/* Shift the ☰ button cleanly to the right of the sidebar when open */
+section[data-testid="stSidebar"][aria-expanded="true"] ~ div .st-key-menu_toggle_btn {
+  left: 350px !important;
+}
+
+/* Pin the real ☰ menu button to the top-left corner */
+.st-key-menu_toggle_btn {
+  position: fixed !important;
+  top: 16px !important;
+  left: 18px !important;
+  z-index: 999999 !important;
+  width: auto !important;
+}
+
+.st-key-menu_toggle_btn button {
+  width: 46px !important;
+  height: 46px !important;
+  padding: 0 !important;
+  background-color: #FBF6EE !important;
+  border: 2px dashed #DCC3A5 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 4px 10px rgba(92, 74, 63, 0.14) !important;
+  transition: transform 0.2s ease, left 0.25s ease !important;
+}
+
+.st-key-menu_toggle_btn button p {
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  color: #5C4A3F !important;
+  margin: 0 !important;
+}
+
+.st-key-menu_toggle_btn button:hover {
+  transform: scale(1.07) rotate(-2deg) !important;
+}
+
+/* Style the Studio Sketchbook dialog */
+div[data-testid="stDialog"] div[role="dialog"] {
+  background-color: #FBF6EE !important;
+  border: 2px dashed #DCC3A5 !important;
+  border-radius: 22px !important;
+  box-shadow: 0 14px 32px rgba(92, 74, 63, 0.22) !important;
+}

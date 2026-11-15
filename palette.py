@@ -5,6 +5,7 @@ import random
 import re
 
 import streamlit as st
+import vault 
 import streamlit.components.v1 as components
 
 from ai import ask_gemini
@@ -122,3 +123,16 @@ Variation: {random.randint(1, 10**6)}
             f"{c['name']}: {c['hex'].upper()}  ({c['use']})" for c in pd["colours"]
         )
         st.download_button("Download Palette", data=sheet, file_name="previs_ideora_palette.txt", mime="text/plain")
+        if st.session_state.get("user"):
+         p_col1, p_col2 = st.columns([3, 1])
+         with p_col1:
+             p_title = st.text_input(
+                 "Palette title",
+                 value=pd["idea"][:35] or "My Palette",
+                 key="pal_save_title",
+                 label_visibility="collapsed",
+             )
+         with p_col2:
+             if st.button("💾 Save Palette", key="save_pal_btn", use_container_width=True):
+                 vault.save_item(st.session_state.user, "Palette", p_title.strip() or "Untitled Palette", pd)
+                 st.toast("Palette saved to your Studio Sketchbook!")

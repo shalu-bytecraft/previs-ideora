@@ -1,12 +1,14 @@
 from music import add_sound
 import random
 import json
+import vault
+vault.init_db()
+from sketch import sketch_page
 
 from pathlib import Path
 
 import streamlit as st
-
-st.set_page_config(page_title="Previs Ideora", page_icon="🎨", layout="wide")
+st.set_page_config(page_title="Previs Ideora", page_icon="🎨", layout="wide", initial_sidebar_state="collapsed")
 add_sound()
 from ai import ask_gemini
 from palette import palette_page
@@ -40,7 +42,20 @@ def label(icon, text, size="h3"):
 
 FONTS = ["Abril Fatface", "Playfair Display", "Special Elite", "DM Serif Display",
          "Rye", "Shadows Into Light", "Caveat Brush"]
-PAPER = ["#FBF6EE", "#EAD9C6", "#DCC3A5", "#E3B9A8", "#F1D3C0", "#E8C4CB"]
+PAPER = [
+    "#E3B9A8",  # muted terracotta
+    "#D9A89C",  # dusty rose clay
+    "#E8C4CB",  # soft blush pink
+    "#DFB5C0",  # vintage mauve
+    "#F1D3C0",  # warm apricot cream
+    "#EBC3AA",  # soft peach
+    "#C8CEAE",  # muted sage green
+    "#BCC7B4",  # dusty eucalyptus
+    "#DCC3A5",  # warm kraft tan
+    "#D3B692",  # toasted almond
+    "#EAD9C6",  # soft oatmeal
+    "#DFC8A2",  # pale ochre sand
+]
 INK = ["#5C4A3F", "#B7766B", "#8A5A4D", "#A68A78"]
 
 
@@ -57,13 +72,15 @@ def torn_polygon(rnd):
 
 def paper_title(words):
     rnd = random.Random(11)
+    palette = PAPER.copy()
+    rnd.shuffle(palette) 
     n = 0
     rows = []
     for word in words:
         tiles = []
         for ch in word:
             family = f"'{FONTS[n % len(FONTS)]}', serif"
-            bg = PAPER[rnd.randrange(len(PAPER))]
+            bg = palette[n % len(palette)]
             ink = INK[rnd.randrange(len(INK))]
             tilt = rnd.uniform(-7, 7)
             w, h = rnd.randint(52, 70), rnd.randint(64, 84)
@@ -80,6 +97,88 @@ def paper_title(words):
 
 load_css("style.css")
 st.markdown(f"<style>{EXTRA_CSS}</style>", unsafe_allow_html=True)
+if "user" not in st.session_state:
+    st.session_state.user = None
+
+
+@st.dialog("📒 Studio Sketchbook")
+def open_sketchbook():
+    if st.session_state.user is None:
+        auth_mode = st.radio("Account", ["Log In", "Sign Up"], horizontal=True, label_visibility="collapsed")
+        uname = st.text_input("Artist Name", placeholder="e.g. maya_draws")
+        pw = st.text_input("Password", type="password", placeholder="••••••••")
+        if st.button(auth_mode, use_container_width=True, key="auth_submit_btn"):
+            if auth_mode == "Sign Up":
+                ok, msg = vault.register_user(uname, pw)
+                if ok:
+                    st.session_state.user = uname.strip().lower()
+                    st.rerun()
+                else:
+                    st.error(msg)
+            else:
+                if vault.login_user(uname, pw):
+                    st.session_state.user = uname.strip().lower()
+                    st.rerun()
+                else:
+                    st.error("Invalid username or password.")
+    else:
+        st.markdown(f"**Welcome back, {st.session_state.user}!**")
+        if st.button("Log Out", use_container_width=True, key="logout_btn"):
+            st.session_state.user = None
+            st.rerun()
+
+        st.divider()
+        st.markdown("#### Saved Works")
+        filter_cat = st.selectbox("Filter", ["All", "Concept", "Palette", "Storyboard", "Mood Board"], label_visibility="collapsed")
+        items = vault.get_items(st.session_state.user, filter_cat)
+        if not items:
+            st.caption("Nothing saved yet! Generate an idea or palette and click Save.")
+        else:
+            for item_id, cat, title, content, created_at in items:
+                with st.expander(f"[{cat}] {title}"):
+                    st.caption(f"Saved {created_at}")
+                    try:
+                        data = json.loads(content)
+                    except Exception:
+                        data = content
+
+                    if isinstance(data, dict):
+                        if cat == "Palette" and "colours" in data:
+                            swatches = " ".join(
+                                f"<span style='display:inline-block;width:18px;height:18px;border-radius:50%;background:{c['hex']};border:1px solid #5C4A3F;' title='{c['name']} ({c['hex']})'></span>"
+                                for c in data["colours"]
+                            )
+                            st.markdown(swatches, unsafe_allow_html=True)
+                            st.caption(data.get("note", ""))
+                        elif cat == "Concept":
+                            st.caption(data.get("idea", ""))
+                        elif cat == "Mood Board":
+                            st.caption(data.get("statement", ""))
+                    else:
+                        st.write(data)
+
+                    b1, b2 = st.columns(2)
+                    with b1:
+                        if st.button("📂 Load", key=f"load_{item_id}", use_container_width=True):
+                            if cat == "Concept" and isinstance(data, dict):
+                                st.session_state.concept_data = data
+                                st.session_state.concept_idea = data.get("idea", "")
+                                st.session_state.concept_version = st.session_state.get("concept_version", 0) + 1
+                                st.session_state.tab = 0
+                            elif cat == "Palette" and isinstance(data, dict):
+                                st.session_state.palette_data = data
+                                st.session_state.tab = 1
+                            elif cat == "Mood Board" and isinstance(data, dict):
+                                st.session_state.mb_data = data
+                                st.session_state.tab = 4
+                            st.rerun()
+                    with b2:
+                        if st.button("🗑️ Delete", key=f"del_{item_id}", use_container_width=True):
+                            vault.delete_item(item_id)
+                            st.rerun()
+
+if st.button("☰", key="menu_toggle_btn"):
+    open_sketchbook()
 
 st.markdown(paper_title(["PREVIS", "IDEORA"]), unsafe_allow_html=True)
 st.markdown('<p class="tagline">Studio Co-Pilot</p>', unsafe_allow_html=True)
@@ -318,6 +417,28 @@ The artist owns the final creative decisions.
             file_name="previs_ideora_concept.txt",
             mime="text/plain"
         )
+        if st.session_state.get("user"):
+            save_col1, save_col2 = st.columns([3, 1])
+            with save_col1:
+                c_title = st.text_input(
+                    "Concept title",
+                    value=st.session_state.concept_idea[:35] or "My Concept",
+                    key=f"c_title_{version}",
+                    label_visibility="collapsed",
+                )
+            with save_col2:
+                if st.button("💾 Save Concept", key=f"save_c_{version}", use_container_width=True):
+                    payload = {
+                        "idea": st.session_state.concept_idea,
+                        "character": character,
+                        "scene": scene,
+                        "mood": mood,
+                        "palette": palette,
+                        "story": story,
+                        "image_prompt": image_prompt,
+                    }
+                    vault.save_item(st.session_state.user, "Concept", c_title.strip() or "Untitled Concept", payload)
+                    st.toast("Concept saved to your Studio Sketchbook!")
 elif st.session_state.tab == 1:
      palette_page(label, name, desc)
     
@@ -329,6 +450,8 @@ elif st.session_state.tab == 3:
 
 elif st.session_state.tab == 4:
     mood_board_page(label, name, desc)
+elif st.session_state.tab == 7:
+    sketch_page(label, name, desc)
 else:
     st.markdown(
         f'<div class="panel"><h3>{name}</h3><p>{desc}</p>'

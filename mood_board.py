@@ -161,3 +161,16 @@ Variation: {random.randint(1, 10**6)}
             + "\n\nTEXTURES\n" + ", ".join(d["textures"]) + "\n"
         )
         st.download_button("Download Mood Board Notes", data=sheet, file_name="previs_ideora_moodboard.txt", mime="text/plain")
+        if st.session_state.get("user"):
+         m_col1, m_col2 = st.columns([3, 1])
+         with m_col1:
+             m_title = st.text_input(
+                 "Mood board title",
+                 value=d["title"] or "My Mood Board",
+                 key="mb_save_title",
+                 label_visibility="collapsed",
+             )
+         with m_col2:
+             if st.button("💾 Save Mood Board", key="save_mb_btn", use_container_width=True):
+                 vault.save_item(st.session_state.user, "Mood Board", m_title.strip() or "Untitled Board", d)
+                 st.toast("Mood board saved to your Studio Sketchbook!")
