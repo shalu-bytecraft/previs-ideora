@@ -183,9 +183,9 @@ Then open **http://localhost:8501**.
 
 | Member | Contribution |
 |--------|--------------|
-| **Sameehita Ghosh (Team Lead)** | Team host. Handled registration, built the UI, assisted with coding and suggested features, project idea. |
+| **Sameehita Ghosh (Team Lead)** | Team host, handled registration, built the UI, assisted with coding and suggested features, Project idea. |
 | **Shalu Kumari** | Wrote the code, structured the project and built the Streamlit app. |
-| **Tiyasha Bhattacharya** | Added special features and tools to the UI, added features and built the MVP, Project idea. |
+| **Tiyasha Bhattacharya** | Project idea, added special tools and designs to the UI, added features and built the MVP |
 | **Mohip Ghosh** | Suggested features to add and built the MVP. |
 
 ---
