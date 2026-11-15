@@ -2,7 +2,7 @@
 
 **An AI idea-to-storyboard assistant that supports digital artists. The AI plans, the artist creates.**
 
-Built by **Team Algo-rythm** for **GeNarrative Clash 2026** (organised by the GeeksforGeeks Student Chapter, Techno India University), **Open Track: Empowering the Creative Artist**.
+Built by **Team Algo-rythm** for **GeNarrative Clash 2026** , **Open Track: Empowering the Creative Artist**.
 
 - **Live demo:** `[add your Streamlit link here]`
 - **Demo video:** `[add your video link here]`
@@ -170,18 +170,25 @@ Then open **http://localhost:8501**.
 
 ## Roadmap
 
-Character Keeper, Panel Redo, Prompt Coach, Reference Library, Version History and one-click Export (PNG, JPG, PDF), plus real image generation once an image quota is available.
+## *Features yet to be functional*
+
+• Character Keeper
+• Panel Redo
+• Prompt Coach
+• Reference Library
+• Version History 
+• One-click Export (PNG, JPG, PDF) & real image generation once an image quota is available.
 
 ---
 
-## Team Algo-rythm
+## Team Tetra Spectra 
 
 | Member | Contribution |
 |--------|--------------|
-| **Sameehita Ghosh** | Team host. Handled registration, built the UI, assisted with coding and suggested features. |
+| **Sameehita Ghosh (Team Lead)** | Team host. Handled registration, built the UI, assisted with coding and suggested features, project idea. |
 | **Shalu Kumari** | Wrote the code, structured the project and built the Streamlit app. |
-| **Tiyasha Bhattacharya** | Added special features and tools to the UI, added features and built the MVP. |
-| **Shivam Jain** | Suggested features to add and built the MVP. |
+| **Tiyasha Bhattacharya** | Added special features and tools to the UI, added features and built the MVP, Project idea. |
+| **Mohip Ghosh** | Suggested features to add and built the MVP. |
 
 ---
 
