@@ -4,8 +4,8 @@
 
 Built by **Team Tetra Spectra** for **GeNarrative Clash 2026** , **[Domain:Digital Art & Visual Co-Pilots]**
 
-- **Live demo:** `[add your Streamlit link here]`
-- **Demo video:** `[add your video link here]`
+- **Live demo:** https://previs-ideora-peychob8xbqxst5jz2uje6.streamlit.app/
+- **Demo video:** https://drive.google.com/file/d/1YceMreHH1196Yjd13GauyS7swyk8Mdh_/view?usp=sharing
 
 ---
 
