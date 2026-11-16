@@ -15,6 +15,7 @@ from palette import palette_page
 from style_lab import style_lab_page
 from storyboard import storyboard_page
 from mood_board import mood_board_page
+from assets import svg_uri
 
 def load_css(path):
     css = Path(path).read_text(encoding="utf-8")
@@ -35,7 +36,7 @@ EXTRA_CSS = (
 def label(icon, text, size="h3"):
     """A heading with a hand-drawn crayon icon instead of an emoji."""
     st.markdown(
-        f'<{size} class="lbl"><img src="/app/static/icons/{icon}.svg" alt="">{text}</{size}>',
+        f'<{size} class="lbl"><img src="{svg_uri("icons", icon)}" alt="">{text}</{size}>',
         unsafe_allow_html=True,
     )
 

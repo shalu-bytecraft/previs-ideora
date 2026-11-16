@@ -6,6 +6,7 @@ import random
 import streamlit as st
 
 from ai import ask_gemini
+from assets import svg_uri
 
 
 def _frame(shot_type):
@@ -96,12 +97,13 @@ Do not name living artists or copyrighted characters. Variation: {random.randint
                 if i >= len(shots):
                     break
                 s = shots[i]
+                frame_src = svg_uri("frames", _frame(s.get("shot_type", "")))
                 with col:
                     with st.container(border=True, key=f"shotcard_{i}"):
                         label("sparkle", f"Shot {i + 1}", "h4")
                         st.markdown(
-                            f'<img src="/app/static/frames/{_frame(s.get("shot_type", ""))}.svg" '
-                            f'alt="framing sketch" style="width:65%;display:block;margin:0 auto">',
+                            f'<img src="{frame_src}" alt="framing sketch" '
+                            f'style="width:65%;display:block;margin:0 auto">',
                             unsafe_allow_html=True,
                         )
                         st.markdown(f"**{s.get('shot_type', '')}** · {s.get('camera_angle', '')}")
@@ -114,8 +116,6 @@ Do not name living artists or copyrighted characters. Variation: {random.randint
                                 key=f"sb_prompt_{version}_{i}",
                                 height=120,
                             )
-
-        
 
         sheet = f"PREVIS-IDEORA STORYBOARD\n{sb['title']}\nIdea: {sb['idea']}\n\n"
         for i, s in enumerate(sb["shots"]):
