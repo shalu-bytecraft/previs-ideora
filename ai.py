@@ -61,6 +61,3 @@ def ask_gemini_image(prompt: str, image_bytes: bytes, mime_type: str = "image/jp
                     continue
                 raise
     raise RuntimeError("Gemini is busy") from last
-
-def ask_gemini_image(prompt: str) -> str:
-    return ask_gemini(prompt)
