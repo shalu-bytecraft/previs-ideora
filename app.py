@@ -4,7 +4,7 @@ import json
 import vault
 vault.init_db()
 from sketch import sketch_page
-
+from panel_redo import panel_redo_page
 from pathlib import Path
 
 import streamlit as st
@@ -452,6 +452,10 @@ elif st.session_state.tab == 3:
 
 elif st.session_state.tab == 4:
     mood_board_page(label, name, desc)
+
+elif st.session_state.tab == 6:
+    panel_redo_page(label, name, desc)
+    
 elif st.session_state.tab == 7:
     sketch_page(label, name, desc)
 elif st.session_state.tab == 8:
