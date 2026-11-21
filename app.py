@@ -8,6 +8,7 @@ from panel_redo import panel_redo_page
 from pathlib import Path
 import streamlit.components.v1 as components
 from palette import _swatches
+from character_keeper import character_keeper_page
 
 import streamlit as st
 st.set_page_config(page_title="Previs Ideora", page_icon="🎨", layout="wide", initial_sidebar_state="collapsed")
@@ -455,14 +456,19 @@ elif st.session_state.tab == 3:
 
 elif st.session_state.tab == 4:
     mood_board_page(label, name, desc)
+    
+elif st.session_state.tab == 5:
+    character_keeper_page(label, name, desc)
 
 elif st.session_state.tab == 6:
     panel_redo_page(label, name, desc)
 
 elif st.session_state.tab == 7:
     sketch_page(label, name, desc)
+    
 elif st.session_state.tab == 8:
     prompt_coach_page(label, name, desc)
+    
 else:
     st.markdown(
         f'<div class="panel"><h3>{name}</h3><p>{desc}</p>'
