@@ -6,6 +6,8 @@ vault.init_db()
 from sketch import sketch_page
 from panel_redo import panel_redo_page
 from pathlib import Path
+import streamlit.components.v1 as components
+from palette import _swatches
 
 import streamlit as st
 st.set_page_config(page_title="Previs Ideora", page_icon="🎨", layout="wide", initial_sidebar_state="collapsed")
@@ -355,15 +357,16 @@ Do not make creative decisions final for the artist.
                 )
 
             with st.container(border=True):
-                label("palette", "Color Palette")
-
                 palette = concept.get("palette", [])
-
-                for colour in palette:
-                    st.markdown(
-                        f"**{colour.get('name', 'Colour')}** — "
-                        f"`{colour.get('hex', '')}`"
-                    )
+            colours = [
+                {
+                    "name": str(c.get("name", "Colour"))[:30],
+                    "hex": str(c.get("hex", "#DDD3C7")).strip(),
+                    "use": "",
+                }
+                for c in palette[:5]
+            ]
+            components.html(_swatches(colours), height=230)
 
             with st.container(border=True):
                 label("sparkle", "Image Generation Prompt")
@@ -455,7 +458,7 @@ elif st.session_state.tab == 4:
 
 elif st.session_state.tab == 6:
     panel_redo_page(label, name, desc)
-    
+
 elif st.session_state.tab == 7:
     sketch_page(label, name, desc)
 elif st.session_state.tab == 8:
