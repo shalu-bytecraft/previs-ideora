@@ -16,6 +16,7 @@ from style_lab import style_lab_page
 from storyboard import storyboard_page
 from mood_board import mood_board_page
 from assets import svg_uri
+from prompt_coach import prompt_coach_page
 
 def load_css(path):
     css = Path(path).read_text(encoding="utf-8")
@@ -453,6 +454,8 @@ elif st.session_state.tab == 4:
     mood_board_page(label, name, desc)
 elif st.session_state.tab == 7:
     sketch_page(label, name, desc)
+elif st.session_state.tab == 8:
+    prompt_coach_page(label, name, desc)
 else:
     st.markdown(
         f'<div class="panel"><h3>{name}</h3><p>{desc}</p>'
