@@ -6,6 +6,7 @@ Built by **Team Tetra Spectra** for **GeNarrative Clash 2026** , **[Domain:Digit
 
 - **Live demo:** https://previs-ideora-peychob8xbqxst5jz2uje6.streamlit.app/
 - **Demo video:** https://drive.google.com/file/d/1YceMreHH1196Yjd13GauyS7swyk8Mdh_/view?usp=sharing
+- **Presentation:** https://drive.google.com/file/d/1UaXOifJdbohBAbTkM6XjiPbbhqc1_9uA/view?usp=drive_link
 
 ---
 
