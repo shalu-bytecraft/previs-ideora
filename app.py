@@ -9,7 +9,6 @@ from pathlib import Path
 import streamlit.components.v1 as components
 from palette import _swatches
 from character_keeper import character_keeper_page
-from version_history import version_history_page
 
 import streamlit as st
 st.set_page_config(page_title="Previs Ideora", page_icon="🎨", layout="wide", initial_sidebar_state="collapsed")
@@ -110,23 +109,24 @@ if "user" not in st.session_state:
 @st.dialog("📒 Studio Sketchbook")
 def open_sketchbook():
     if st.session_state.user is None:
-        auth_mode = st.radio("Account", ["Log In", "Sign Up"], horizontal=True, label_visibility="collapsed")
-        uname = st.text_input("Artist Name", placeholder="e.g. maya_draws")
-        pw = st.text_input("Password", type="password", placeholder="••••••••")
-        if st.button(auth_mode, use_container_width=True, key="auth_submit_btn"):
-            if auth_mode == "Sign Up":
-                ok, msg = vault.register_user(uname, pw)
-                if ok:
-                    st.session_state.user = uname.strip().lower()
-                    st.rerun()
+            auth_mode = st.radio("Account", ["Log In", "Sign Up"], horizontal=True, label_visibility="collapsed")
+            uname = st.text_input("Email", placeholder="e.g. artist@example.com")
+            pw = st.text_input("Password", type="password", placeholder="••••••••")
+            if st.button(auth_mode, use_container_width=True, key="auth_submit_btn"):
+                if auth_mode == "Sign Up":
+                    ok, msg = vault.register_user(uname, pw)
+                    if ok:
+                        st.session_state.user = uname.strip().lower()
+                        st.rerun()
+                    else:
+                        st.error(msg)
                 else:
-                    st.error(msg)
-            else:
-                if vault.login_user(uname, pw):
-                    st.session_state.user = uname.strip().lower()
-                    st.rerun()
-                else:
-                    st.error("Invalid username or password.")
+                    ok, msg = vault.login_user(uname, pw)
+                    if ok:
+                        st.session_state.user = msg
+                        st.rerun()
+                    else:
+                        st.error(msg)
     else:
         st.markdown(f"**Welcome back, {st.session_state.user}!**")
         if st.button("Log Out", use_container_width=True, key="logout_btn"):
@@ -469,8 +469,6 @@ elif st.session_state.tab == 7:
     
 elif st.session_state.tab == 8:
     prompt_coach_page(label, name, desc)
-elif st.session_state.tab == 10:
-    version_history_page(label, name, desc)
     
 else:
     st.markdown(
